@@ -1,2 +1,10 @@
+pluginManagement {
+    plugins {
+        id('io.freefair.lombok') version "$lombokPluginVersion"
+    }
+}
+plugins {
+    id('org.gradle.toolchains.foojay-resolver-convention') version "$gradleJvmToolChainResolverPluginFoojayVersion"
+}
 rootProject.name = 'JvmProvingGrounds'
 

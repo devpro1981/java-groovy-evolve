@@ -1,9 +1,27 @@
 plugins {
+    id 'java'
     id 'groovy'
+    id('io.freefair.lombok')
 }
 
 group 'org.example'
 version '1.0-SNAPSHOT'
+
+int javaPlatformVersion = 17
+def javaPlatformVendor = JvmVendorSpec.AZUL
+
+
+//Toolchains are the Gradle answer to a fast changing Java world
+//Refer to https://blog.gradle.org/java-toolchains; https://docs.gradle.org/current/userguide/toolchains.html
+
+//Toolchain auto-provisioning is controlled using Foojay Toolchains Plugin based on the foojay DiscoAPI.
+//Refer to settings.gradle and gradle.properties to control the versioning of this plugin
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(javaPlatformVersion)
+        vendor = javaPlatformVendor
+    }
+}
 
 repositories {
     mavenCentral()
@@ -13,6 +31,20 @@ dependencies {
     implementation 'org.apache.groovy:groovy:4.0.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+sourceSets {
+
+    main {
+        //Java source files reference Groovy files
+        //So use Groovy compiler to compile both Groovy and Java sources
+        groovy {
+            srcDirs += ['src/main/java'/*, 'build/generated/sources/annotationProcessor/groovy/main'*/]
+        }
+        java {
+            srcDirs = [] // don't compile Java code twice
+        }
+    }
 }
 
 test {
